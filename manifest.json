@@ -9,7 +9,7 @@
     "default_popup": "src/index.html",
     "default_icon": "src/images/favicon-32x32.png"
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "content_scripts": [
     {
       "run_at": "document_end",

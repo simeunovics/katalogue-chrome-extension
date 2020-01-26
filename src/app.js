@@ -1,27 +1,30 @@
 const MAX_DELAY_BETWEEN_KEYS = 1000;
 const TRIGGER_KEY_ID = 221;
-const REQUIRED_NUMBER_OF_CLICKS = 2;
+const REQUIRED_NUMBER_OF_CLICKS = 3;
 const APP_BASE_URL = 'https://katalogue-app.herokuapp.com';
 const SAVE_LINK_BTN_ID = 'store-link-btn';
 const NOTIFICATION_DISPLAY_TIMEOUT = 3000;
 
-const recordKeyPress = ({ keyCode }, keyPresses) => {
-  if (keyCode === TRIGGER_KEY_ID) {
-    keyPresses.push('click');
-  }
-};
 const shouldSaveLink = keyPresses =>
   keyPresses.length >= REQUIRED_NUMBER_OF_CLICKS;
 const setReference = ref =>
   new Promise((res, rej) => {
-    chrome.storage.sync.set({ currentReference: ref }, res);
+    try {
+      chrome.storage.sync.set({ currentReference: ref }, res);
+    } catch (e) {
+      rej(e);
+    }
   });
 
 const getReference = () =>
   new Promise((res, rej) => {
-    chrome.storage.sync.get(['currentReference'], ({ currentReference }) =>
-      res(currentReference)
-    );
+    try {
+      chrome.storage.sync.get(['currentReference'], ({ currentReference }) =>
+        res(currentReference)
+      );
+    } catch (e) {
+      rej(e);
+    }
   });
 
 const saveLink = async () => {
@@ -45,12 +48,10 @@ const saveLink = async () => {
     },
     body: JSON.stringify(body),
   });
-  const content = await response.json();
-  const { reference: newReference } = content;
+  const { reference: newReference } = await response.json();
   if (!currentReference) {
     await setReference(newReference);
   }
-  console.log({ response, content });
 };
 const showSuccessMessage = () => {
   const notification = document.createElement('div');
@@ -75,20 +76,23 @@ const showSuccessMessage = () => {
 };
 
 (function main() {
-  const keyPresses = [];
-  setInterval(() => {
-    keyPresses.pop();
-  }, MAX_DELAY_BETWEEN_KEYS);
+  let keyPresses = [];
+  let timeout = null;
   const onKeyDown = e => {
     if (e.keyCode !== TRIGGER_KEY_ID) {
       return;
     }
-
-    recordKeyPress(e, keyPresses);
-    if (shouldSaveLink(keyPresses)) {
-      saveLink();
-      showSuccessMessage();
+    if (timeout) {
+      clearTimeout(timeout);
     }
+
+    keyPresses.push('click');
+    timeout = setTimeout(() => (keyPresses = []), MAX_DELAY_BETWEEN_KEYS);
+    if (!shouldSaveLink(keyPresses)) {
+      return;
+    }
+    saveLink();
+    showSuccessMessage();
   };
   document.addEventListener('keyup', onKeyDown, false);
 })();
