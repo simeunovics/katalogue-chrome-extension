@@ -1,0 +1,27 @@
+{
+  "name": "Katalogue",
+  "short_name": "katalogue",
+  "description": "Quickly bookmark articles you're reading for later reference",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "author": "Simo Simeunovic <simeunovics@gmail.com>",
+  "browser_action": {
+    "default_popup": "src/index.html",
+    "default_icon": "src/images/favicon-32x32.png"
+  },
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "css": ["src/style.css"],
+      "js": ["src/app.js"],
+      "matches": ["*://*/*"]
+    }
+  ],
+  "icons": {
+    "16": "src/images/favicon-16x16.png",
+    "32": "src/images/favicon-32x32.png",
+    "192": "src/images/favicon-192x192.png",
+    "512": "src/images/favicon-512x512.png"
+  }
+}
