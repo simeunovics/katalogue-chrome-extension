@@ -2,10 +2,27 @@
 <html>
   <head>
     <meta charset="utf8" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div>
-      <p>Reference: <pre id="reference-link-display"></pre></p>
+    <div class="m-5">
+      <p class="font-mono text-sm">
+        <span>Reference:</span>
+        <input
+          type="text"
+          placeholder="Hint: Leave empty for auto-generated"
+          class="text-sm text-gray-800 w-full"
+          id="reference-link-display"
+        />
+      </p>
+      <hr class="mt-2 mb-2" />
+      <button
+        id="submit-btn"
+        class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-1 px-2 border border-gray-400 rounded shadow"
+        type="button"
+      >
+        Change
+      </button>
     </div>
     <script type="text/javascript" src="popup.js"></script>
   </body>
