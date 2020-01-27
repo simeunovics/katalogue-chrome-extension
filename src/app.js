@@ -1,5 +1,5 @@
 const MAX_DELAY_BETWEEN_KEYS = 1000;
-const TRIGGER_KEY_ID = 221;
+const TRIGGER_KEY_ID = 68; // Letter "d"
 const REQUIRED_NUMBER_OF_CLICKS = 2;
 const APP_BASE_URL = 'https://katalogue-app.herokuapp.com';
 const SAVE_LINK_BTN_ID = 'store-link-btn';
